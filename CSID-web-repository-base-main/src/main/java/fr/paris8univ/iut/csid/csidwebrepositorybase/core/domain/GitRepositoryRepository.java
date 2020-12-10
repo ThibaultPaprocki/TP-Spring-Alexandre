@@ -30,12 +30,12 @@ public class GitRepositoryRepository {
     public Optional<GitRepository> getOneRepository(String name) throws URISyntaxException {
         GitRepositoryEntity gitE = repDAO.findById(name).get();
         GitRepository gitRepo = new GitRepository(gitE.getName(),gitE.getOwner(),gitE.getForks(),gitE.getOpen_issues());
-        //TODo Créer variable de temps qui calcule à chaque update.
+        //TODo Créer variable de temps qui calcule à chaque update afin de faire une maj après 5 minutes (patcher les issues et forks).
         //if(tempsUpdate>5){
-           GitRepositoryDTO gitDTO = this.githubRepDAO.getGithubLink(gitRepo.getName(),gitRepo.getOwner());
-           gitRepo.setForks(gitDTO.getForks());
-           gitRepo.setOpen_issues(gitDTO.getOpen_issues());
-           this.partialUpdate(name,gitRepo);
+        //   GitRepositoryDTO gitDTO = this.githubRepDAO.getGithubLink(gitRepo.getName(),gitRepo.getOwner());
+        //   gitRepo.setForks(gitDTO.getForks());
+        //   gitRepo.setOpen_issues(gitDTO.getOpen_issues());
+        //   this.partialUpdate(name,gitRepo);
         //}
         return Optional.of(gitRepo);
     }
