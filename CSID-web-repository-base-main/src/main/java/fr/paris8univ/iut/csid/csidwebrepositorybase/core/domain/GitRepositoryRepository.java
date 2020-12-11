@@ -1,11 +1,9 @@
 package fr.paris8univ.iut.csid.csidwebrepositorybase.core.domain;
-import fr.paris8univ.iut.csid.csidwebrepositorybase.core.dao.GitRepositoryDTO;
-import fr.paris8univ.iut.csid.csidwebrepositorybase.core.dao.GitRepositoryDao;
-import fr.paris8univ.iut.csid.csidwebrepositorybase.core.dao.GitRepositoryEntity;
-import fr.paris8univ.iut.csid.csidwebrepositorybase.core.dao.GithubRepositoryDao;
+import fr.paris8univ.iut.csid.csidwebrepositorybase.core.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,11 +13,13 @@ public class GitRepositoryRepository {
 
     final private GitRepositoryDao repDAO;
     final private GithubRepositoryDao githubRepDAO;
+    final private StatistiquesDao statsDAO;
 
     @Autowired
-    public GitRepositoryRepository(GitRepositoryDao repDAO, GithubRepositoryDao githubRepDAO) {
+    public GitRepositoryRepository(GitRepositoryDao repDAO, GithubRepositoryDao githubRepDAO, StatistiquesDao statsDAO) {
         this.repDAO=repDAO;
         this.githubRepDAO=githubRepDAO;
+        this.statsDAO=statsDAO;
     }
 
     public List<GitRepository> getRepositories() {
@@ -37,6 +37,8 @@ public class GitRepositoryRepository {
         //   gitRepo.setOpen_issues(gitDTO.getOpen_issues());
         //   this.partialUpdate(name,gitRepo);
         //}
+        this.statsDAO.save(new StatistiquesEntity(0,gitRepo.getName(),"issues", LocalDateTime.now().toString(),gitRepo.getOpen_issues()));
+        this.statsDAO.save(new StatistiquesEntity(0,gitRepo.getName(),"forks", LocalDateTime.now().toString(),gitRepo.getForks()));
         return Optional.of(gitRepo);
     }
 
